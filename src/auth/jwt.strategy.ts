@@ -5,13 +5,14 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
+    // Берем секрет из переменной окружения, обрезая лишние пробелы
+    const secret = (process.env.JWT_SECRET || 'defaultSecret').trim();
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET || 'defaultSecret',
+      secretOrKey: secret,
     });
-    console.log('JwtStrategy initialized with secret:', process.env.JWT_SECRET);
-    console.log('Loaded JWT_SECRET:', process.env.JWT_SECRET);
+    console.log('JwtStrategy initialized with secret:', secret);
   }
 
   async validate(payload: any) {
